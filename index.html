@@ -703,6 +703,7 @@
   <span class="footer-text">© 2026 LazyShift. Built for shift workers, by one. Made with ☕ in Constanța.</span>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ANIMATED CLOCK
   const canvas = document.getElementById('clock');
@@ -791,13 +792,26 @@
   drawClock();
 
   // EMAIL FORM
-  document.getElementById('signup-form').addEventListener('submit', function(e) {
+  const sbClient = window.supabase.createClient(
+    'https://tmkrbnkztmohfoohbgfy.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRta3Jibmt6dG1vaGZvb2hiZ2Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NzEwMDYsImV4cCI6MjA5NzA0NzAwNn0.3cs4A3nLk8jIEfo4byWpPiJrf59qnli1QiKeM7GiB8I'
+  );
+
+  document.getElementById('signup-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const email = document.getElementById('email-input').value;
     if (!email) return;
+
+    const { error } = await sbClient
+      .from('waitlist')
+      .insert([{ email }]);
+
     this.style.display = 'none';
     document.getElementById('form-success').style.display = 'block';
-    // TODO: connect to backend / Supabase
+
+    if (error && error.code !== '23505') {
+      console.error('Supabase error:', error);
+    }
   });
 </script>
 </body>
