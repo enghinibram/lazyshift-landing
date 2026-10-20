@@ -4,14 +4,51 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LazyShift — Shift Work, Simplified</title>
-  <meta name="description" content="The shift calculator that works as hard as you don't have to. Track hours, calculate pay, stay compliant — across any country." />
+  <meta name="description" content="The shift calculator that works as hard as you don't have to. Track your shift hours, leave and overtime, and estimate your pay." />
   <meta property="og:title" content="LazyShift — Shift Work, Simplified" />
   <meta property="og:description" content="The shift calculator that works as hard as you don't have to." />
   <meta property="og:type" content="website" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <meta property="og:url" content="https://lazyshift.com/" />
+  <link rel="canonical" href="https://lazyshift.com/" />
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <script>
+    // Google Consent Mode v2: everything denied until the visitor accepts.
+    // gtag.js itself is only downloaded after Accept (see loadGA below).
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("consent", "default", {
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      analytics_storage: "denied"
+    });
+  </script>
+
   <style>
+    /* Fonts are self-hosted (fonts/) so no request reaches Google before consent. */
+    @font-face {
+      font-family: 'Space Grotesk'; font-style: normal; font-weight: 300 700; font-display: swap;
+      src: url(/fonts/space-grotesk-latin-ext.woff2) format('woff2');
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    @font-face {
+      font-family: 'Space Grotesk'; font-style: normal; font-weight: 300 700; font-display: swap;
+      src: url(/fonts/space-grotesk-latin.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    @font-face {
+      font-family: 'Inter'; font-style: normal; font-weight: 400 500; font-display: swap;
+      src: url(/fonts/inter-latin-ext.woff2) format('woff2');
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    @font-face {
+      font-family: 'Inter'; font-style: normal; font-weight: 400 500; font-display: swap;
+      src: url(/fonts/inter-latin.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -426,6 +463,26 @@
       color: var(--text-secondary);
     }
 
+    .footer-links {
+      flex-basis: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      font-size: 13px;
+    }
+
+    .footer-links a, .footer-links button {
+      color: var(--text-secondary);
+      text-decoration: underline;
+      background: none;
+      border: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .footer-links a:hover, .footer-links button:hover { color: var(--accent); }
+
     /* DIVIDER */
     .divider {
       border: none;
@@ -446,7 +503,8 @@
       .clock-wrap { order: -1; }
       .hero-sub { max-width: 100%; }
       .countries { justify-content: center; }
-      footer { flex-direction: column; text-align: center; }
+      footer { flex-direction: column; text-align: center; padding: 32px 24px; }
+      .footer-links { justify-content: center; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -457,14 +515,16 @@
 <body>
 
   <!-- ===== COOKIE BANNER ===== -->
-  <div id="cookie-banner">
+  <!-- Consent is stored per domain: a choice made on app.lazyshift.com does not apply here. -->
+  <div id="cookie-banner" role="dialog" aria-label="Cookie consent">
     <div class="cookie-text">
-      🍪 We use Google Analytics to understand how the site is used. No personal data is stored without your consent.
-      <a href="https://app.lazyshift.com/privacy.html" target="_blank">Privacy policy</a>
+      🍪 We'd like to use Google Analytics cookies to understand how the site is used. They are only set if you accept.
+      You can change your choice at any time via "Cookie settings" at the bottom of the page.
+      <a href="https://app.lazyshift.com/privacy.html" target="_blank" rel="noopener">Privacy policy</a>
     </div>
     <div class="cookie-actions">
-      <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Accept</button>
-      <button class="cookie-btn cookie-reject" onclick="rejectCookies()">Decline</button>
+      <button type="button" class="cookie-btn cookie-reject" onclick="rejectCookies()">Reject</button>
+      <button type="button" class="cookie-btn cookie-accept" onclick="acceptCookies()">Accept</button>
     </div>
   </div>
 
@@ -485,45 +545,74 @@
     font-size: 14px;
     box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
   }
-  .cookie-text a { color: #1D9E75; text-decoration: underline; }
+  .cookie-text { flex: 1 1 320px; }
+  .cookie-text a { color: #4ade80; text-decoration: underline; }
   .cookie-actions { display: flex; gap: 8px; flex-shrink: 0; }
-  .cookie-btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; }
-  .cookie-accept { background: #1D9E75; color: white; }
-  .cookie-reject { background: transparent; color: #f0f0f0; border: 1px solid #555; }
+  .cookie-btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; font-family: inherit; }
+  /* Accept and Reject are deliberately identical in style. */
+  .cookie-accept, .cookie-reject { background: #1D9E75; color: white; }
   @media (max-width: 480px) {
-    #cookie-banner { flex-direction: column; align-items: flex-start; }
+    #cookie-banner { flex-direction: column; align-items: stretch; }
+    .cookie-text { flex: none; }
     .cookie-actions { width: 100%; }
     .cookie-btn { flex: 1; }
   }
   </style>
 
   <script>
+  var GA_ID = "G-79WSB1T1EJ";
+  var gaLoaded = false;
+  function readConsent() {
+    try { return localStorage.getItem("cookie_consent"); } catch (e) { return null; }
+  }
+  function saveConsent(value) {
+    try { localStorage.setItem("cookie_consent", value); } catch (e) {}
+  }
   function acceptCookies() {
-    localStorage.setItem("cookie_consent", "accepted");
+    saveConsent("accepted");
     document.getElementById("cookie-banner").style.display = "none";
     loadGA();
   }
   function rejectCookies() {
-    localStorage.setItem("cookie_consent", "rejected");
+    var wasLoaded = gaLoaded;
+    saveConsent("rejected");
     document.getElementById("cookie-banner").style.display = "none";
+    gtag("consent", "update", { analytics_storage: "denied" });
+    clearGACookies();
+    // gtag.js may already be running on this page; a reload drops it.
+    if (wasLoaded) location.reload();
+  }
+  function openCookieSettings() {
+    document.getElementById("cookie-banner").style.display = "flex";
+  }
+  // Removes GA cookies (_ga, _ga_<id>) on this host and its parent domain.
+  function clearGACookies() {
+    var host = location.hostname;
+    var domains = ["", host, "." + host.split(".").slice(-2).join(".")];
+    document.cookie.split(";").forEach(function(c) {
+      var name = c.split("=")[0].trim();
+      if (!/^_ga/.test(name)) return;
+      domains.forEach(function(d) {
+        document.cookie = name + "=; Max-Age=0; path=/" + (d ? "; domain=" + d : "");
+      });
+    });
   }
   function loadGA() {
+    if (gaLoaded) return;
+    gaLoaded = true;
+    // Analytics only; advertising signals stay denied.
+    gtag("consent", "update", { analytics_storage: "granted" });
+    gtag("js", new Date());
+    gtag("config", GA_ID);
     var s = document.createElement("script");
     s.async = true;
-    s.src = "https://www.googletagmanager.com/gtag/js?id=G-79WSB1T1EJ";
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
     document.head.appendChild(s);
-    s.onload = function() {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      window.gtag = gtag;
-      gtag("js", new Date());
-      gtag("config", "G-79WSB1T1EJ");
-    };
   }
   (function() {
-    var c = localStorage.getItem("cookie_consent");
+    var c = readConsent();
     if (c === "accepted") { loadGA(); }
-    else if (!c) { document.getElementById("cookie-banner").style.display = "flex"; }
+    else if (!c) { openCookieSettings(); }
   })();
   </script>
 
@@ -541,11 +630,11 @@
       <p class="hero-eyebrow">Shift work calculator</p>
       <h1>Work your shifts.<br /><em>Not the math.</em></h1>
       <p class="hero-sub">
-        LazyShift calculates your hours, pay, and leave automatically — whether you're a nurse in London, a firefighter in Berlin, or a security guard in Texas.
+        LazyShift works out your hours and leave, and estimates your pay — whether you're a nurse in London, a firefighter in Berlin, or a security guard in Texas.
       </p>
 
       <div class="countries">
-        <span class="countries-label">Available in:</span>
+        <span class="countries-label">Salary presets for:</span>
         <span class="country-pill">🇷🇴 Romania</span>
         <span class="country-pill">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</span>
         <span class="country-pill">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland</span>
@@ -578,22 +667,22 @@
     <div class="feature-card">
       <div class="feature-icon">🗓️</div>
       <div class="feature-title">Any shift pattern</div>
-      <div class="feature-desc">12/24, 12/48, rotating 3-shift, continental, compressed week — configure once, track forever.</div>
+      <div class="feature-desc">12/24, 12/48, 24/48, 24/72, fixed or rotating 8-hour shifts, or your own custom pattern — configure once, track forever.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">💰</div>
       <div class="feature-title">Pay calculator</div>
-      <div class="feature-desc">Night differentials, weekend bonuses, overtime — all calculated automatically based on local labor law.</div>
+      <div class="feature-desc">Estimate your net pay, with night and overtime bonuses at your employer's rates and approximate tax presets per country.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📋</div>
       <div class="feature-title">Leave tracking</div>
-      <div class="feature-desc">Annual leave, sick days, compensatory days — your entitlements in one place, no spreadsheets needed.</div>
+      <div class="feature-desc">Mark annual leave and sick days on the calendar — the hours are counted for you, no spreadsheets needed.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">⚖️</div>
-      <div class="feature-title">Local compliance</div>
-      <div class="feature-desc">Built on verified labor law data for each country. Know your rights before your employer does.</div>
+      <div class="feature-title">Monthly norm &amp; overtime</div>
+      <div class="feature-desc">See at a glance whether you're over or under your monthly working-hours norm, and by how much.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📱</div>
@@ -603,7 +692,7 @@
     <div class="feature-card">
       <div class="feature-icon">🌍</div>
       <div class="feature-title">Multi-country</div>
-      <div class="feature-desc">Moving abroad or working across borders? Switch country in one tap, your shifts stay in sync.</div>
+      <div class="feature-desc">Pick a country preset in the salary calculator — or enter your own rates for anywhere else.</div>
     </div>
   </div>
 </section>
@@ -614,70 +703,70 @@
 <section class="countries-section">
   <div class="countries-section-inner">
     <p class="section-label">Coverage</p>
-    <h2>Built country by country, right</h2>
+    <h2>Salary presets for 12 countries</h2>
     <p style="color: var(--text-secondary); font-size: 16px; max-width: 560px; margin: 0 auto;">
-      We don't guess at labor law. Each country version is built from official legislation — verified and updated.
+      The salary calculator includes approximate tax presets for these countries. Presets are estimates — always check your payslip or local tax authority.
     </p>
     <div class="country-cards">
       <div class="country-card">
         <div class="country-flag">🇷🇴</div>
         <div class="country-name">Romania</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
         <div class="country-name">England</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
         <div class="country-name">Scotland</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🏴󠁧󠁢󠁷󠁬󠁳󠁿</div>
         <div class="country-name">Wales</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🇬🇧</div>
         <div class="country-name">Northern Ireland</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🇩🇪</div>
         <div class="country-name">Germany</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🇫🇷</div>
         <div class="country-name">France</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🇮🇹</div>
         <div class="country-name">Italy</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🇪🇸</div>
         <div class="country-name">Spain</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🇸🇪</div>
         <div class="country-name">Sweden</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🇫🇮</div>
         <div class="country-name">Finland</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
       <div class="country-card">
         <div class="country-flag">🇺🇸</div>
         <div class="country-name">United States</div>
-        <div class="country-status">Live</div>
+        <div class="country-status">Preset</div>
       </div>
     </div>
   </div>
@@ -704,8 +793,8 @@
 <!-- CTA BOTTOM -->
 <section class="cta-section">
   <p class="section-label">Get started</p>
-  <h2>Ready to track your shifts?<br />It's free.</h2>
-  <p class="cta-sub">LazyShift is live. No install, no account needed — open it right now.</p>
+  <h2>Ready to track your shifts?<br />The calculator is free.</h2>
+  <p class="cta-sub">LazyShift is live. No install, no account needed — open it right now. Pro: coming soon.</p>
   <div class="cta-buttons">
     <a href="https://app.lazyshift.com" class="btn-primary">Open LazyShift →</a>
   </div>
@@ -715,6 +804,13 @@
 <footer>
   <a href="/" class="footer-logo">lazy<span>shift</span></a>
   <span class="footer-text">© 2026 LazyShift. Built for shift workers, by one. Made with ☕ in Constanța.</span>
+  <div class="footer-links" role="navigation" aria-label="Legal">
+    <a href="https://app.lazyshift.com/terms.html">Terms of Service</a>
+    <a href="https://app.lazyshift.com/refund.html">Refunds &amp; Cancellation</a>
+    <a href="https://app.lazyshift.com/privacy.html">Privacy Policy</a>
+    <button type="button" onclick="openCookieSettings()">Cookie settings</button>
+    <a href="mailto:dev.lazylabs@gmail.com">Contact</a>
+  </div>
 </footer>
 
 <script>
